@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/" >
+<head th:replace="fragments :: head" ></head>
+<body class="text-center">
+
+<nav th:replace="fragments :: navigation" ></nav>
+
+<!--<div class="jumbotron jumbotron-fluid" >-->
+    <!--<div th:if="${person.getFirstName() != null}">-->
+        <!--<h1>Welcome :-->
+            <!--<span th:text="${person.getFirstName()}"></span>-->
+            <!--<span th:text="${person.getLastName()}"></span>-->
+        <!--</h1>-->
+        <!--&lt;!&ndash;<p>E-mail: <span th:text="${person.getUser().userEmail}"></span></p>&ndash;&gt;-->
+        <!--<p>Password: <span th:text="${person.getUser().password}"></span></p>-->
+        <!--<p th:each="phone : ${person.getPhoneList()}" >Phone: <span th:text="${phone.getPhoneNum()}"></span></p>-->
+    <!--</div>-->
+    <!--<span>E-Mail from session:<p th:text="${session.user.userEmail}" th:if="${session.user != null}"></p></span>-->
+    <!--<span>Lastname from sessionPerson attribute:<p th:text="${session.sessionPerson.getLastName()}" th:if="${session.sessionPerson != null}"></p></span>-->
+<!--</div>-->
+<div class="jumbotron " >
+
+    <div class="container w-80">
+        <form METHOD="POST"  th:object="${updatedPerson}" class="mx-auto border shadow p-3 mb-5 bg-white rounded rounded-sm" style="width: 45%; padding: 10px; background-color: #f1ffff" >
+            <h4>Update details</h4>
+            <input class="form-control" style="margin: 10px auto;"
+                   th:field="${person.firstName}"
+                   th:value = "${person.firstName}">
+            <!--<span class="text-danger" th:errors="${person.firstName}"></span>-->
+            <input class="form-control" style="margin: 10px auto;"
+                   th:field="${person.lastName}"
+                   th:value = "${person.lastName}"
+            >
+            <!--<span  class="text-danger" th:errors="${person.lastName}"></span>-->
+            <!--<input class="form-control" style="margin: 10px auto;" th:field="${user.userEmail}" th:text="${user.userEmail}"  placeholder="E-mail">-->
+            <!--<span  class="text-danger" th:errors="${user.userEmail}"></span>-->
+            <!--<input class="form-control" style="margin: 10px auto;" type="password" th:field="${user.password}" th:text="${user.password}"  placeholder="Password">-->
+            <!--<span  class="text-danger" th:errors="${user.password}"></span>-->
+            <input class="form-control" style="margin: 10px auto;" type="submit" th:value="Update" >
+            <hr>
+            <br>
+            <!--<p class="mt-20">Already have an account?&nbsp;&nbsp;  <a href="/login" class="badge badge-primary" >&nbsp;Login&nbsp;</a></p>-->
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

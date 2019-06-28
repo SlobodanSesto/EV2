@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/" >
+<head th:replace="fragments :: head" ></head>
+<body class="text-center">
+
+
+    <div class="jumbotron vh-100" >
+
+        <div class="container w-80">
+            <form METHOD="POST" th:object="${person}" class="mx-auto border shadow p-3 mb-5 bg-white rounded rounded-sm" style="width: 45%; padding: 10px; background-color: #f1ffff" >
+                <h4>Create account</h4>
+                <input class="form-control" style="margin: 10px auto;" th:field="${person.firstName}" placeholder="First name">
+                <span class="text-danger" th:errors="${person.firstName}"></span>
+                <input class="form-control" style="margin: 10px auto;" th:field="${person.lastName}" placeholder="Last name">
+                <span  class="text-danger" th:errors="${person.lastName}"></span>
+                <input class="form-control" style="margin: 10px auto;" th:field="${user.userEmail}" placeholder="E-mail">
+                <span  class="text-danger" th:errors="${user.userEmail}"></span>
+                <input class="form-control" style="margin: 10px auto;" type="password" th:field="${user.password}" placeholder="Password">
+                <span  class="text-danger" th:errors="${user.password}"></span>
+                <input class="form-control" style="margin: 10px auto;" type="submit" th:value="Register" th:action="registration">
+                <hr>
+                <br>
+                <p class="mt-20">Already have an account?&nbsp;&nbsp;  <a href="/login" class="badge badge-primary" >&nbsp;Login&nbsp;</a></p>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

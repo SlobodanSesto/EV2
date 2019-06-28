@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="text-center">
+
+<nav th:replace="fragments :: navigation"></nav>
+<div th:replace="fragments :: sidenav"></div>
+<div class="jumbotron jumbotron-fluid">
+    <div th:if="${session.person.getFirstName() != null}">
+        <h3>Hello,
+            <span th:text="${session.person.getFirstName()+ ' '}"></span>
+            this is the admin control panel.
+        </h3>
+        <!--<p th:if="${msg}" th:text="${msg}" style="color: #ff363b"></p>-->
+        <div class="alert alert-danger" role="alert" th:if="${photoError}">
+            <span th:text="${photoError}"></span>
+        </div>
+        <div class="alert alert-success" role="alert" th:if="${photoUploaded}">
+            <span th:text="${photoUploaded}"></span>
+        </div>
+        <a th:href="@{'/findUser'}" class="btn btn-danger edit-login">Change password</a>
+    </div>
+</div>
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Manufacturer</th>
+            <th scope="col">Category</th>
+            <th scope="col"> </th>
+            <th scope="col"> </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pro : ${products}">
+            <th scope="row" th:text="${pro.getProductId()}"></th>
+            <td th:text="${pro.getProductName()}"></td>
+            <td>manufacturer</td>
+            <td th:text="${pro.getCategory()}"></td>
+            <td>
+                <form method="POST" action="/deleteProduct">
+                    <input type="hidden" name="productId" th:value="${pro.getProductId()}"/>
+                    <button type="submit" class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
+                    <!--<input type="submit" class="btn btn-danger" value="X"/>-->
+                </form>
+            </td>
+            <td>
+                <a th:href="@{'/findProduct/' + ${pro.getProductId()}}" style="color: white;"
+                   class="btn btn-sm btn-primary editProductBtn"><span class="fa fa-edit"></span></a>
+            </td>
+
+        </tr>
+        <tr>
+            <td colspan="6">
+                <button class="btn btn-sm btn-success addProductBtn">Add new product</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="product-form">
+    <form th:action="@{/saveProduct}" method="POST" enctype="multipart/form-data">
+        <div class="modal fade" id="productUpdateModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Edit product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="productId" name="productId" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-name" class="col-form-label">Product name:</label>
+                            <input type="text" class="form-control" id="product-name" name="product-name" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-price" class="col-form-label">Price:</label>
+                            <input type="text" class="form-control" id="product-price" name="product-price" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-desc" class="col-form-label">Product description:</label>
+                            <input type="text" class="form-control" id="product-desc" name="product-desc" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-stock" class="col-form-label">Quantity:</label>
+                            <input type="text" class="form-control" id="product-stock" name="product-stock" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-category" class="col-form-label">Category:</label>
+                            <input type="text" class="form-control" id="product-category" name="product-category" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-img" class="col-form-label">Product image:</label>
+                            <input type="file" class="form-control" id="product-img" name="product-img" value=""/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="edit-login-form">
+    <form th:action="@{/updateUser}" method="POST">
+        <div class="modal fade" id="userUpdateModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="userModalLabel">Change password</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!--<label for="personId" class="col-form-label"></label>-->
+                            <input type="hidden" class="form-control" id="personId" name="personId" value=""/>
+                            <!--<label for="email" class="col-form-label">E-mail :</label>-->
+                            <input readonly class="form-control" id="email" name="email" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label for="pass" class="col-form-label">Current password :</label>
+                            <input type="password" class="form-control" id="pass" name="pass" value=""/>
+                            <label for="new-pass" class="col-form-label">New password :</label>
+                            <input type="password" class="form-control" id="new-pass" name="new-pass" value=""/>
+                            <label for="new-pass-conf" class="col-form-label">Confirm new password :</label>
+                            <input type="password" class="form-control" id="new-pass-conf" name="new-pass-conf"
+                                   value=""/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="text-center">
+
+<nav th:replace="fragments :: navigation"></nav>
+<div th:replace="fragments :: sidenav"></div>
+<div class="jumbotron jumbotron-fluid">
+    <div th:if="${session.person.getFirstName() != null}">
+        <h3>Hello,
+            <span th:text="${session.person.getFirstName()}"></span>
+        </h3>
+
+        <p th:if="${msg}" th:text="${msg}" style="color: #ff363b"></p>
+        <a th:href="@{'/findUser'}" class="btn btn-success edit-login">Change password</a>
+
+        <!--<p th:text="${session.userId}"></p>-->
+
+    </div>
+
+    <!--<span>Person id <p th:text="${session.person.getPersonId()}" th:if="${session.person != null}"></p></span>-->
+    <!--<span>Lastname from session person attribute:<p th:text="${session.person.getLastName()}"-->
+                                                    <!--th:if="${session.person != null}"></p></span>-->
+</div>
+<div class="container row">
+
+    <div class="container border text-center" style="width: 18rem;">Phone numbers
+        <!-- style="color: white;" -->
+        <button class="btn btn-sm btn-primary addPhoneBtn">+ADD</button>
+        <div th:each="phone : ${session.person.getPhoneList()}" class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${phone.getPhoneNum()}"></h5>
+                <!--<p class="card-text" th:text="${phone.getPhoneID()}"></p>-->
+                <a th:href="@{'/findPhone/' + ${phone.getPhoneID()}}" style="color: white;"
+                   class="form-control btn btn-sm btn-primary editPhoneBtn">Edit</a>
+                <form method="POST" action="/deleteNumber">
+                    <input type="hidden" name="phoneId" th:value="${phone.getPhoneID()}"/>
+                    <input type="submit" class="form-control btn btn-danger" value="Delete"/>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container border text-center" style="width: 18rem;">Addresses
+        <button class="btn btn-sm btn-primary addAddressBtn">+ADD</button>
+        <div th:each=" address : ${session.person.getAddressList()}" class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${address.street}"></h5>
+                <!--<p class="card-text" th:text="${address.state}"></p>-->
+                <a th:href="@{'/findAddress/' + ${address.getAddressId()}}" style="color: white;"
+                   class="form-control btn btn-sm btn-primary editAddressBtn">Edit</a>
+                <form method="POST" action="/deleteAddress">
+                    <input type="hidden" name="addressId" th:value="${address.getAddressId()}"/>
+                    <input type="submit" class="form-control btn btn-danger" value="Delete"/>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--<div class="update">-->
+        <!--<a href="/update" class="badge badge-primary"> Update Details</a>-->
+    <!--</div>-->
+</div>
+
+<div class="phone-form">
+    <form th:action="@{/saveNumber}" method="POST">
+        <div class="modal fade" id="phoneUpdateModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Add phone number</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="phoneId" class="col-form-label"></label>
+                            <input type="hidden" class="form-control" id="phoneId" name="phoneId" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label for="phone-num" class="col-form-label">Contact number:</label>
+                            <input type="text" class="form-control" id="phone-num" name="phone-num" value="" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="address-form">
+    <form th:action="@{/saveAddress}" method="POST">
+        <div class="modal fade" id="addressUpdateModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addressModalLabel">Add new address</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="addressId" class="col-form-label"></label>
+                            <input type="hidden" class="form-control" id="addressId" name="addressId" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label for="street-address" class="col-form-label">Street :</label>
+                            <input type="text" class="form-control" id="street-address" name="street-address" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label for="city" class="col-form-label">City :</label>
+                            <input type="text" class="form-control" id="city" name="city" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label for="state" class="col-form-label">State (2 Character format ex: 'NY' for New York) :</label>
+                            <input type="text" class="form-control" id="state" name="state" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label for="zip" class="col-form-label">Zip code :</label>
+                            <input type="text" class="form-control" id="zip" name="zip" value="" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="edit-login-form">
+    <form th:action="@{/updateUser}" method="POST">
+        <div class="modal fade" id="userUpdateModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="userModalLabel">Change password</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!--<label for="personId" class="col-form-label"></label>-->
+                            <input type="hidden" class="form-control" id="personId" name="personId" value="" />
+                            <!--<label for="email" class="col-form-label">E-mail :</label>-->
+                            <input  readonly class="form-control" id="email" name="email" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label for="pass" class="col-form-label">Current password :</label>
+                            <input type="password" class="form-control" id="pass" name="pass" value="" />
+                            <label for="new-pass" class="col-form-label">New password :</label>
+                            <input type="password" class="form-control" id="new-pass" name="new-pass" value="" />
+                            <label for="new-pass-conf" class="col-form-label">Confirm new password :</label>
+                            <input type="password" class="form-control" id="new-pass-conf" name="new-pass-conf" value="" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

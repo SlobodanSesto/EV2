@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="text-center">
+
+<nav th:replace="fragments :: navigation"></nav>
+<div th:replace="fragments :: sidenav"></div>
+<div class="jumbotron">
+    <div class="logged-out vh-100" th:if="${loggedOut}">
+        <p th:text="${loggedOut}"></p>
+    </div>
+    <div th:if="${loggedOut == null}">
+        <h1>Featured Items</h1>
+    </div>
+</div>
+<div style="width: 980px" class="jumbotron text-center mx-auto" th:if="${loggedOut == null}">
+    <div class="container mx-auto row">
+        <div class="card mx-auto" style="width: 18rem; margin: 5px 15px;" th:each="productObj : ${productList}">
+            <a th:href="@{'/findProduct/' + ${productObj.getProductId()}}" data-id="1.jpg" class="product-info-btn">
+                <img th:src="@{/images/1.jpg}" class="card-img-top border" alt="...">
+            </a>
+            <div class="card-body">
+                <h5 class="card-title" th:text="${productObj.getProductName()}"></h5>
+                <p class="card-text" th:text="${productObj.getProductDesc()}"></p>
+                <form th:method="POST" th:action="@{/addToCart}">
+                    <input type="hidden" name="proId" id="proId" th:value="${productObj.getProductId()}">
+                    <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="product-info-modal">
+    <div class="modal fade" id="productInfoModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <input type="hidden" id="productId" name="productId" value=""/>
+                    <div>
+                        <img class="productImg" id="productImg" src="" alt="">
+                    </div>
+                    <p class="productDesc"></p>
+                    <h5 class="productPrice"></h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">ADD TO CART</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

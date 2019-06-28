@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/" >
+<head th:replace="fragments :: head" ></head>
+<body class="text-center">
+
+    <!--<nav th:replace="fragments :: navigation" ></nav>-->
+
+    <div class="jumbotron jumbotron-fluid vh-100" >
+
+        <div class="container w-80">
+            <form METHOD="POST" class="mx-auto border shadow p-3 mb-5 bg-white rounded rounded-sm"
+                  style="width: 45%; padding: 10px; background-color: #f1ffff" >
+                <h3>Login</h3>
+                <input class="form-control  " style="margin: 10px auto;" type="text" th:name="userEmail" placeholder="E-mail">
+                <input class="form-control  " style="margin: 10px auto;" type="password" th:name="password" placeholder="Password">
+                <input class="form-control  " style="margin: 10px auto;" type="submit" th:value="Login" th:action="login">
+                <hr>
+                <br>
+                <p class="mt-20">No account? &nbsp;&nbsp;<a href="registration" class="badge badge-primary" >&nbsp;Register&nbsp;</a></p>
+            </form>
+        </div>
+
+        <p th:if="${message}" th:text="${message}" style="color: #ff363b"></p>
+    </div>
+</body>
+</html>
