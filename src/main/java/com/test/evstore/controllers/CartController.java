@@ -37,4 +37,13 @@ public class CartController {
         return "cart";
     }
 
+    @RequestMapping(value = "/removeFromCart", method = RequestMethod.POST)
+    public String removeFromCart( @RequestParam("productId") int proId,
+                                  HttpSession session) {
+        Person person = (Person) session.getAttribute("person");
+        invoiceRepo.removeFromCart(person.getInvoice().getInvoiceId(), proId);
+        person.getInvoice().setProducts(invoiceRepo.getProductsOnInvoice(person.getInvoice().getInvoiceId()));
+        return "cart";
+    }
+
 }

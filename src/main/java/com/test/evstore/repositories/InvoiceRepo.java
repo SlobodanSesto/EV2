@@ -84,4 +84,15 @@ public class InvoiceRepo {
 
         return products;
     }
+
+    public void removeFromCart(int invoiceId, int proId) {
+        String sql = "DELETE FROM invoice_product WHERE pro_id=? AND inv_id=? LIMIT 1;";
+        try {
+            jdbcTemplate.update(sql, proId, invoiceId);
+            System.out.println("item id: "+proId+" was removed from cart id: "+invoiceId);
+        }catch (Exception e) {
+            System.out.println(e.getStackTrace());
+            System.out.println(e);
+        }
+    }
 }
