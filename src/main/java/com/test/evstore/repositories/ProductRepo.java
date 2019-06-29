@@ -56,7 +56,12 @@ public class ProductRepo {
 
     public void deleteProductById(int id) {
         String sql = "DELETE FROM product WHERE pro_id=?";
-        jdbcTemplate.update(sql, id);
+        try {
+            jdbcTemplate.update(sql, id);
+        } catch (Exception e) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
     }
 
     public Product getProductById(int id) {
@@ -88,7 +93,13 @@ public class ProductRepo {
 
     public void updateProduct(Product p) {
         String sql = "UPDATE product SET pro_name=?, pro_price=?, pro_desc=?, pro_stock=?, category_id=? WHERE pro_id=?";
-        jdbcTemplate.update(sql , p.getProductName(), p.getProductPrice(),
-                p.getProductDesc(), p.getQuantity(), p.getCategory(), p.getProductId());
+        try{
+            jdbcTemplate.update(sql , p.getProductName(), p.getProductPrice(),
+                    p.getProductDesc(), p.getQuantity(), p.getCategory(), p.getProductId());
+        } catch (Exception e) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+
     }
 }

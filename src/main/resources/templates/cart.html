@@ -26,7 +26,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="productObj : ${session.person.getInvoice().getProducts()}">
-                    <td><img th:src="@{/images/1.jpg}" class="img-responsive" style="width:80px; border-radius: 5px;"
+                    <td><img th:src="@{'/images/' + ${productObj.getProductId()} +'.jpg'}" class="img-responsive" style="width:80px; border-radius: 5px;"
                              alt="..."></td>
                     <td th:text="${productObj.getProductName()}"></td>
                     <td>
@@ -37,19 +37,20 @@
                     </td>
                     <td th:text="'$' + ${productObj.getProductPrice()}"></td>
                 </tr>
+                <tr>
+                    <th colspan="2"></th>
+                    <th colspan="2" th:text="'Total in cart : $ ' + ${session.person.getInvoice().getInvoiceTotal()}"></th>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td>
+                        <form method="POST" action="/checkOut">
+                            <input type="submit" class="btn btn-outline-primary" value="Checkout">
+                        </form>
+                    </td>
+                </tr>
                 </tbody>
             </table>
-            <!--<div class="card mx-auto" style="width: 18rem; margin: 5px 15px;" th:each="productObj : ${session.person.getInvoice().getProducts()}">-->
-                <!--<a th:href="@{'/findProduct/' + ${productObj.getProductId()}}" data-id="1.jpg" class="product-info-btn">-->
-                    <!--<img th:src="@{/images/1.jpg}" class="card-img-top border" alt="...">-->
-                <!--</a>-->
-                <!--<div class="card-body">-->
-                    <!--<h5 class="card-title" th:text="${productObj.getProductName()}"></h5>-->
-                    <!--<p class="card-text" th:text="${productObj.getProductDesc()}"></p>-->
-                    <!--<a href="#" class="btn btn-primary" th:text="'$' + ${productObj.getProductPrice()}"></a>-->
-                <!--</div>-->
-            <!--</div>-->
-            </a>
         </div>
     </div>
 </div>

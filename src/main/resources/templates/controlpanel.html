@@ -25,6 +25,7 @@
     <table class="table table-hover">
         <thead>
         <tr>
+            <th></th>
             <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col">Manufacturer</th>
@@ -35,6 +36,9 @@
         </thead>
         <tbody>
         <tr th:each="pro : ${products}">
+            <td><img th:src="@{'/images/' + ${pro.getProductId()} +'.jpg'}" class="img-responsive" style="width:80px; border-radius: 5px;"
+                     alt="...">
+            </td>
             <th scope="row" th:text="${pro.getProductId()}"></th>
             <td th:text="${pro.getProductName()}"></td>
             <td>manufacturer</td>
@@ -53,8 +57,8 @@
 
         </tr>
         <tr>
-            <td colspan="6">
-                <button class="btn btn-sm btn-success addProductBtn">Add new product</button>
+            <td colspan="7">
+                <button class="btn btn-sm btn-success addProductBtn">+ Add new product</button>
             </td>
         </tr>
         </tbody>

@@ -20,12 +20,14 @@ public class InvoiceRepo {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    PersonRepo personRepo;
 
     //fetches existing invoice by person id, returns Invoice obj with id, total, and empty list for products
     //that should be populated before rendering by productRepo using the invoice_product table (many to many)
     public Invoice getPersonInvoice(int personId) {
         Invoice invoice = null;
-        String sql = "SELECT * FROM invoice WHERE per_id=?";
+        String sql = "SELECT * FROM invoice WHERE per_id=? AND state=1";
         try {
             invoice = jdbcTemplate.queryForObject(sql,(resultSet, i) -> {
                 return new InvoiceRowMapper().mapRow(resultSet, i);
@@ -59,8 +61,10 @@ public class InvoiceRepo {
         String sql = "INSERT INTO invoice_product (inv_id, pro_id) VALUES (?,?);";
         try {
             jdbcTemplate.update(sql, invoiceId, proId);
+            updateTotal(invoiceId);
             System.out.println("Item added to invoice");
         }catch (Exception e) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
             System.out.println(e);
         }
 
@@ -89,10 +93,55 @@ public class InvoiceRepo {
         String sql = "DELETE FROM invoice_product WHERE pro_id=? AND inv_id=? LIMIT 1;";
         try {
             jdbcTemplate.update(sql, proId, invoiceId);
+            updateTotal(invoiceId);
             System.out.println("item id: "+proId+" was removed from cart id: "+invoiceId);
         }catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
             System.out.println(e);
         }
     }
+
+    public int startCheckOut(int invoiceId, int personId) {
+
+        String sql = "UPDATE invoice SET state=3 WHERE inv_id=?;";
+        String orderSql = "INSERT INTO placed_order (address_id, invoice_id) VALUES (?, ?);";
+        try {
+            jdbcTemplate.update(sql, invoiceId);
+            int primaryAddressId = personRepo.getPrimaryAddress(personId).getAddressId();
+            jdbcTemplate.update(orderSql, primaryAddressId, invoiceId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+            e.printStackTrace();
+            return -1;
+        }
+        return insertInvoice(personId);
+    }
+
+
+    public double getTotal(int invoiceId) {
+
+        String sql = "SELECT inv_total FROM invoice WHERE inv_id=?";
+        double total = 0;
+        try {
+            total = jdbcTemplate.query(sql,resultSet -> { resultSet.next(); return resultSet.getDouble("inv_total");}, invoiceId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public void updateTotal(int invId) {
+        String sql = "UPDATE invoice SET inv_total=(SELECT sum(p.pro_price) FROM product p " +
+                "INNER JOIN invoice_product ip ON p.pro_id = ip.pro_id WHERE ip.inv_id=?) WHERE inv_id=?;";
+        try {
+            jdbcTemplate.update(sql, invId, invId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+    }
+
 }

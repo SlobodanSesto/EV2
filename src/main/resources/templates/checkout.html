@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="text-center">
+
+<nav th:replace="fragments :: navigation"></nav>
+<div th:replace="fragments :: sidenav"></div>
+<div class="jumbotron jumbotron-fluid ">
+    <div th:if="${session.person.getFirstName() != null}">
+        <h3>Hello,
+            <span th:text="${session.person.getFirstName()}"></span>
+            &nbsp;this is the checkout view.
+        </h3>
+        <div class="alert alert-success" role="alert" th:if="${Success}">
+            <span th:text="${Success}"></span>
+        </div>
+        <div class="alert alert-danger" role="alert" th:if="${Fail}">
+            <span th:text="${Fail}"></span>
+        </div>
+    </div>
+    <!--<div class="container" th:if="${session.person.getInvoice() != null}">-->
+    <!--<h4 th:text="${session.person.getInvoice().getInvoiceId()}"></h4>-->
+    <!--<div class="container mx-auto row">-->
+    <!--<table class="table table-hover">-->
+    <!--<thead>-->
+    <!--<tr>-->
+    <!--<th></th>-->
+    <!--<th>Product</th>-->
+    <!--<th>Remove</th>-->
+    <!--<th>Total</th>-->
+    <!--</tr>-->
+    <!--</thead>-->
+    <!--<tbody>-->
+    <!--<tr th:each="productObj : ${session.person.getInvoice().getProducts()}">-->
+    <!--<td><img th:src="@{'/images/' + ${productObj.getProductId()} +'.jpg'}" class="img-responsive" style="width:80px; border-radius: 5px;"-->
+    <!--alt="..."></td>-->
+    <!--<td th:text="${productObj.getProductName()}"></td>-->
+    <!--<td>-->
+    <!--<form method="POST" action="/removeFromCart">-->
+    <!--<input type="hidden" name="productId" th:value="${productObj.getProductId()}"/>-->
+    <!--<input type="submit" class="btn btn-danger" value="X"/>-->
+    <!--</form>-->
+    <!--</td>-->
+    <!--<td th:text="'$' + ${productObj.getProductPrice()}"></td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+    <!--</table>-->
+    <!--<div class="card mx-auto" style="width: 18rem; margin: 5px 15px;" th:each="productObj : ${session.person.getInvoice().getProducts()}">-->
+    <!--<a th:href="@{'/findProduct/' + ${productObj.getProductId()}}" data-id="1.jpg" class="product-info-btn">-->
+    <!--<img th:src="@{/images/1.jpg}" class="card-img-top border" alt="...">-->
+    <!--</a>-->
+    <!--<div class="card-body">-->
+    <!--<h5 class="card-title" th:text="${productObj.getProductName()}"></h5>-->
+    <!--<p class="card-text" th:text="${productObj.getProductDesc()}"></p>-->
+    <!--<a href="#" class="btn btn-primary" th:text="'$' + ${productObj.getProductPrice()}"></a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+</div>
+</body>
+</html>

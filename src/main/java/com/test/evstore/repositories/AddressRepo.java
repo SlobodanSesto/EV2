@@ -52,8 +52,14 @@ public class AddressRepo {
     public void save(Address a) {
         String sql = "UPDATE address SET address_street=?, address_city=?," +
                 " address_state=?, address_zip=?, per_id=?  WHERE address_id=?";
-        jdbcTemplate.update(sql, a.getStreet(), a.getCity(),
-                a.getState(), a.getZip(), a.getPersonId(), a.getAddressId());
+        try {
+            jdbcTemplate.update(sql, a.getStreet(), a.getCity(),
+                    a.getState(), a.getZip(), a.getPersonId(), a.getAddressId());
+        } catch (Exception e) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+
     }
 
     public Address getAddressById(Integer addressId) {
@@ -71,7 +77,11 @@ public class AddressRepo {
     public void deleteAddress(int addressId) {
 
         String sql = "DELETE FROM address WHERE address_id=?";
-        jdbcTemplate.update(sql,addressId);
-    }
+        try {
+            jdbcTemplate.update(sql,addressId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }    }
 
 }

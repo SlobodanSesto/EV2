@@ -1,7 +1,9 @@
 package com.test.evstore.repositories;
 
 import com.test.evstore.RowMapper.PersonRowMapper;
+import com.test.evstore.models.Address;
 import com.test.evstore.models.Person;
+import com.test.evstore.models.Phone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,10 @@ public class PersonRepo {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    AddressRepo addressRepo;
+    @Autowired
+    PhoneRepo phoneRepo;
 
     public Person getPersonById(int personId){
         Person person = jdbcTemplate.queryForObject("SELECT * FROM person WHERE per_id=?",
@@ -45,10 +51,66 @@ public class PersonRepo {
     public void updatePersonDetails(int personId, Person updatedPerson) throws SQLException {
 
         String sqlPerson = "UPDATE person SET per_name = ?, per_lastname = ? WHERE per_id = ?";
-//        String sqlPhone = "UPDATE phone SET phone = ? WHERE per_id = ?";
-//        String sqlAddress = "UPDATE address SET address_street=?, address_city=?, address_state=?, address_zip=? WHERE per_id=?";
-        jdbcTemplate.update(sqlPerson, updatedPerson.getFirstName(),updatedPerson.getLastName(), personId);
-//        jdbcTemplate.update(sqlPhone, updatedPerson.getPhoneList().get(0),personId);
+        try {
+            jdbcTemplate.update(sqlPerson, updatedPerson.getFirstName(),updatedPerson.getLastName(), personId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
 
+    }
+
+    public void setPrimaryAddress(int personId, int addressId) {
+        String sql = "UPDATE person SET primary_address_id=? WHERE per_id=?;";
+        try {
+            jdbcTemplate.update(sql, addressId, personId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+    }
+
+    public void setPrimaryPhone(int personId, int phoneId) {
+        String sql = "UPDATE person SET primary_phone_id=? WHERE per_id=?;";
+        try {
+            jdbcTemplate.update(sql, phoneId, personId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+    }
+
+    public Address getPrimaryAddress(int personId) {
+        String sql = "SELECT * FROM person WHERE per_id=?;";
+        Integer primaryAddressId = -1;
+        try {
+            primaryAddressId = jdbcTemplate.query(sql,resultSet -> { resultSet.next();
+                return resultSet.getInt("primary_address_id"); },personId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+            return null;
+        }
+        if (primaryAddressId > 0) {
+            return addressRepo.getAddressById(primaryAddressId);
+        }
+        return null;
+    }
+
+    public Phone getPrimaryPhone(int personId) {
+        String sql = "SELECT * FROM person WHERE per_id=?;";
+        Integer primaryPhoneId = -1;
+        try {
+            primaryPhoneId = jdbcTemplate.query(sql,resultSet -> { resultSet.next();
+                return resultSet.getInt("primary_phone_id");},personId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+            return null;
+        }
+        if (primaryPhoneId > 0) {
+            return phoneRepo.findPhoneById(primaryPhoneId);
+        }
+        return null;
     }
 }

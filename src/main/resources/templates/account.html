@@ -17,10 +17,12 @@
         <!--<p th:text="${session.userId}"></p>-->
 
     </div>
-
-    <!--<span>Person id <p th:text="${session.person.getPersonId()}" th:if="${session.person != null}"></p></span>-->
-    <!--<span>Lastname from session person attribute:<p th:text="${session.person.getLastName()}"-->
-                                                    <!--th:if="${session.person != null}"></p></span>-->
+    <div class="alert alert-danger" role="alert" th:if="${AddressMsg}">
+        <span th:text="${AddressMsg}"></span>
+    </div>
+    <div class="alert alert-danger" role="alert" th:if="${PhoneMsg}">
+        <span th:text="${PhoneMsg}"></span>
+    </div>
 </div>
 <div class="container row">
 
@@ -51,6 +53,10 @@
                 <form method="POST" action="/deleteAddress">
                     <input type="hidden" name="addressId" th:value="${address.getAddressId()}"/>
                     <input type="submit" class="form-control btn btn-danger" value="Delete"/>
+                </form>
+                <form method="POST" action="/setPrimaryAddress">
+                    <input type="hidden" name="addressId" th:value="${address.getAddressId()}"/>
+                    <input type="submit" class="form-control btn btn-success" value="Set as primary"/>
                 </form>
             </div>
         </div>

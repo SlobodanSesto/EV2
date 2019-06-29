@@ -55,9 +55,23 @@ public class LoginController {
             List<Phone> phoneList = phoneRepo.getPhoneList(p.getPersonId());
             List<Address> addressList = addressRepo.getAllAddresses(p.getPersonId());
             p.setInvoice(invoiceRepo.getPersonInvoice(p.getPersonId()));
+//            p.getInvoice().setInvoiceTotal(invoiceRepo.getTotal(p.getInvoice().getInvoiceId()));
             p.setUser(u);
             p.setPhoneList(phoneList);
             p.setAddressList(addressList);
+
+            Address primaryAddress = null;
+            primaryAddress = personRepo.getPrimaryAddress(p.getPersonId());
+            if (primaryAddress != null) {
+                p.setPrimaryAddress(primaryAddress);
+            } else model.addAttribute("AddressMsg", "Please select or add a primary shipping address.");
+
+            Phone primaryPhone = null;
+            primaryPhone = personRepo.getPrimaryPhone(p.getPersonId());
+            if (primaryPhone != null) {
+                p.setPrimaryPhone(primaryPhone);
+            } else model.addAttribute("PhoneMsg", "Please select or add a primary contact number.");
+
             session.setAttribute("person", p);
 
             //checks if admin and returns admin control panel

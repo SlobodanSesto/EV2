@@ -5,19 +5,15 @@ import com.test.evstore.models.Product;
 import com.test.evstore.repositories.ProductRepo;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -27,7 +23,8 @@ public class ProductController {
 
     @Autowired
     ProductRepo productRepo;
-
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
 //    @ResponseBody
 //    public String test() {
@@ -135,6 +132,7 @@ public class ProductController {
                     }
                 }catch (Exception e) {
                     System.out.println(e);
+                    jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
                     model.addAttribute("photoError", "Encountered an error uploading the file");
                     return "controlpanel";
                 }

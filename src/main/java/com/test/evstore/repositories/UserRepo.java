@@ -24,11 +24,21 @@ public class UserRepo {
 
     public void insertNewUser(User user, int personId) {
         String sql = "INSERT INTO user (user_email, user_pass, per_id) VALUES ( ?, ?, ?)";
-        jdbcTemplate.update(sql, user.getUserEmail(), user.getPassword(), personId);
+        try {
+            jdbcTemplate.update(sql, user.getUserEmail(), user.getPassword(), personId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
     }
 
     public void updatePass(String p , int id) {
         String sql = "UPDATE user SET user_pass=? WHERE per_id=?";
-        jdbcTemplate.update(sql, p, id);
+        try {
+            jdbcTemplate.update(sql, p, id);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
     }
 }

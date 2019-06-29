@@ -108,11 +108,16 @@ $(document).ready(function () {
         var href = $(this).attr('href');
         $.get(href, function (product, status) {
             $('.product-info-modal #productId').val(product.productId);
-            $('.product-info-modal   #productImg').attr("src", "/images/"+myImageId);
+            $('.product-info-modal   #productImg').attr("src", "/images/"+myImageId+".jpg");
+            $('.product-info-modal   #productImg').css("width", "60%");
             $('.product-info-modal   .productDesc').text(product.productDesc);
             $('.product-info-modal   .productPrice').text("$"+product.productPrice);
 
         })
+
+        // $('.product-info-modal .carouselExampleSlidesOnly').carousel({
+        //     interval: 2000
+        // })
 
         $('.product-info-modal #productInfoModal').modal();
     })

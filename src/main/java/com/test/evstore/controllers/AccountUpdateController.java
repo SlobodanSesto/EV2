@@ -188,6 +188,17 @@ public class AccountUpdateController {
         return "account";
     }
 
+    @RequestMapping(value = "/setPrimaryAddress", method = RequestMethod.POST)
+    public String setPrimaryAddress(@RequestParam("addressId") int addressId, HttpSession session) {
+
+        Person person = (Person) session.getAttribute("person");
+
+        personRepo.setPrimaryAddress(person.getPersonId(), addressId);
+
+        return "account";
+    }
+
+
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
     public String updateUser( @RequestParam("email") String email,
                               @RequestParam("pass") String pass,
