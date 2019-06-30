@@ -110,6 +110,7 @@ $(document).ready(function () {
             $('.product-info-modal #productId').val(product.productId);
             $('.product-info-modal   #productImg').attr("src", "/images/"+myImageId+".jpg");
             $('.product-info-modal   #productImg').css("width", "60%");
+            $('.product-info-modal   #proModalId').val(product.productId);
             $('.product-info-modal   .productDesc').text(product.productDesc);
             $('.product-info-modal   .productPrice').text("$"+product.productPrice);
 

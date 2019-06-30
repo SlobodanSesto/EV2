@@ -102,4 +102,38 @@ public class ProductRepo {
         }
 
     }
+
+    //gets current number of product in stock
+    public int getProductStock(int id) {
+        String sql = "SELECT pro_stock FROM product WHERE pro_id=?";
+        int count = jdbcTemplate.query(sql,resultSet -> { resultSet.next(); return resultSet.getInt("pro_stock");}, id);
+        return count;
+    }
+
+    //updates the quantity (-1) for given product_id and returns updated stock
+    //updated number will be used to check if item is in stock to ship when order is being processed
+    public void updateStock(int id) {
+        String sql = "UPDATE product SET pro_stock=? WHERE pro_id=?";
+        int stock = getProductStock(id)-1;
+        try {
+            jdbcTemplate.update(sql, stock, id);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+    }
+
+    //if there was a problem during checkout with a product not being in stock this function
+    // would reverse the updated stock in the product table to return to state before attempted checkout
+    public void reverseStock(int id) {
+        String sql = "UPDATE product SET pro_stock=? WHERE pro_id=?";
+        int stock = getProductStock(id)+1;
+        try {
+            jdbcTemplate.update(sql, stock, id);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+    }
+
 }

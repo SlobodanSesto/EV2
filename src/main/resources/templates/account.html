@@ -6,6 +6,9 @@
 <nav th:replace="fragments :: navigation"></nav>
 <div th:replace="fragments :: sidenav"></div>
 <div class="jumbotron jumbotron-fluid">
+    <div class="alert alert-danger" role="alert" th:if="${MissingAddress}">
+        <span th:text="${MissingAddress}"></span>
+    </div>
     <div th:if="${session.person.getFirstName() != null}">
         <h3>Hello,
             <span th:text="${session.person.getFirstName()}"></span>
@@ -24,6 +27,17 @@
         <span th:text="${PhoneMsg}"></span>
     </div>
 </div>
+<div class="container">
+    <div th:if="${session.person.getPrimaryAddress() != null}">
+        <p th:text="'Primary shipping address: ' +
+                        ${session.person.getPrimaryAddress().getStreet()} + ' ' +
+                        ${session.person.getPrimaryAddress().getCity()}  + ', ' +
+                        ${session.person.getPrimaryAddress().getState()} "></p>
+    </div>
+    <div th:if="${session.person.getPrimaryPhone() != null}">
+        <p th:text="'Primary contact number: ' + ${session.person.getPrimaryPhone().getPhoneNum()}"></p>
+    </div>
+</div>
 <div class="container row">
 
     <div class="container border text-center" style="width: 18rem;">Phone numbers
@@ -38,6 +52,10 @@
                 <form method="POST" action="/deleteNumber">
                     <input type="hidden" name="phoneId" th:value="${phone.getPhoneID()}"/>
                     <input type="submit" class="form-control btn btn-danger" value="Delete"/>
+                </form>
+                <form method="POST" action="/setPrimaryPhone">
+                    <input type="hidden" name="phoneId" th:value="${phone.getPhoneID()}"/>
+                    <input type="submit" class="form-control btn btn-success" value="Set as primary"/>
                 </form>
             </div>
         </div>

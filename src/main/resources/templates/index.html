@@ -73,7 +73,10 @@
                 <!--</div>-->
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">ADD TO CART</button>
+                    <form th:method="POST" th:action="@{/addToCart}">
+                        <input type="hidden" name="proId" id="proModalId" value="">
+                        <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
+                    </form>
                 </div>
             </div>
         </div>

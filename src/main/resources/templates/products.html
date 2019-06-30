@@ -10,15 +10,18 @@
 <div th:replace="fragments :: sidenav"></div>
 
 <div class="container mx-auto row">
-        <div class="card mx-auto" style="width: 18rem; margin: 5px 15px;" th:each="productObj : ${products}">
-            <a th:href="@{'/findProduct/' + ${productObj.getProductId()}}" data-id="1.jpg" class="product-info-btn">
-                <img th:src="@{'/images/' + ${productObj.getProductId()} +'.jpg'}" class="card-img-top border" alt="...">
-            </a>
-            <div class="card-body">
-                <h5 class="card-title" th:text="${productObj.getProductName()}"></h5>
-                <p class="card-text" th:text="${productObj.getProductDesc()}"></p>
-                <a href="#" class="btn btn-primary" th:text="'$' + ${productObj.getProductPrice()}"></a>
-            </div>
+    <div class="card mx-auto" style="width: 18rem; margin: 5px 15px;" th:each="productObj : ${products}">
+        <a th:href="@{'/findProduct/' + ${productObj.getProductId()}}" th:data-id="${productObj.getProductId()}" class="product-info-btn">
+            <img th:src="@{'/images/' + ${productObj.getProductId()} +'.jpg'}" class="card-img-top border" alt="...">
+        </a>
+        <div class="card-body">
+            <h5 class="card-title" th:text="${productObj.getProductName()}"></h5>
+            <p class="card-text" th:text="${productObj.getProductDesc()}"></p>
+
+            <form th:method="POST" th:action="@{/addToCart}">
+                <input type="hidden" name="proId" id="proId" th:value="${productObj.getProductId()}">
+                <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
+            </form>
         </div>
     </a>
 </div>
@@ -34,12 +37,22 @@
                     <input type="hidden" id="productId" name="productId" value=""/>
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="img-responsive col-9">
-                                <img class="productImg" id="productImg" src="" alt="">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="img-responsive col-9">
+                                        <img class="productImg" id="productImg" src="" alt="">
+                                    </div>
+                                    <div class="col-3">
+                                        <p class="productDesc"></p>
+                                        <h5 class="productPrice"></h5>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-3">
-                                <p class="productDesc"></p>
-                                <h5 class="productPrice"></h5>
+                            <div class="modal-footer">
+                                <form th:method="POST" th:action="@{/addToCart}">
+                                    <input type="hidden" name="proId" id="proModalId" value="">
+                                    <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
+                                </form>
                             </div>
                         </div>
                     </div>

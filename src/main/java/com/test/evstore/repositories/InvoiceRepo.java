@@ -2,6 +2,7 @@ package com.test.evstore.repositories;
 
 import com.test.evstore.RowMapper.InvoiceRowMapper;
 import com.test.evstore.RowMapper.ProductRowMapper;
+import com.test.evstore.models.Address;
 import com.test.evstore.models.Invoice;
 import com.test.evstore.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class InvoiceRepo {
             System.out.println("Item added to invoice");
         }catch (Exception e) {
             jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
-            System.out.println(e);
+            System.out.println(e.getStackTrace());
         }
 
     }
@@ -93,8 +94,8 @@ public class InvoiceRepo {
         String sql = "DELETE FROM invoice_product WHERE pro_id=? AND inv_id=? LIMIT 1;";
         try {
             jdbcTemplate.update(sql, proId, invoiceId);
-            updateTotal(invoiceId);
             System.out.println("item id: "+proId+" was removed from cart id: "+invoiceId);
+            updateTotal(invoiceId);
         }catch (Exception e) {
             jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
             System.out.println(e);
@@ -104,11 +105,12 @@ public class InvoiceRepo {
     public int startCheckOut(int invoiceId, int personId) {
 
         String sql = "UPDATE invoice SET state=3 WHERE inv_id=?;";
-        String orderSql = "INSERT INTO placed_order (address_id, invoice_id) VALUES (?, ?);";
+        String orderSql = "INSERT INTO placed_order (invoice_id, add_street, add_city, add_state, add_zip) " +
+                "VALUES (?, ?, ?, ?, ?);";
         try {
             jdbcTemplate.update(sql, invoiceId);
-            int primaryAddressId = personRepo.getPrimaryAddress(personId).getAddressId();
-            jdbcTemplate.update(orderSql, primaryAddressId, invoiceId);
+            Address a = personRepo.getPrimaryAddress(personId);
+            jdbcTemplate.update(orderSql, invoiceId, a.getStreet(), a.getCity(), a.getState(), a.getZip());
         } catch ( Exception e ) {
             jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
             System.out.println(e);
@@ -117,7 +119,6 @@ public class InvoiceRepo {
         }
         return insertInvoice(personId);
     }
-
 
     public double getTotal(int invoiceId) {
 
@@ -143,5 +144,15 @@ public class InvoiceRepo {
             System.out.println(e);
         }
     }
+
+    public  Double salesStats(int cartState) {
+        String sql = "SELECT sum(inv_total) AS total FROM invoice WHERE state=?";
+        Double total = 0.0;
+        total = jdbcTemplate.query(sql, resultSet -> { resultSet.next();
+            return resultSet.getDouble("total");}, cartState);
+        return total;
+    }
+
+
 
 }

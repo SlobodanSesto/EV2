@@ -94,6 +94,7 @@ public class AccountUpdateController {
                 phoneToRemove = p;
             }
         }
+        if (phoneId == person.getPrimaryPhone().getPhoneID())
         person.getPhoneList().remove(phoneToRemove);
         System.out.println(phoneId);
         phoneRepo.deleteNumber(phoneId);
@@ -169,7 +170,8 @@ public class AccountUpdateController {
     }
 
     @RequestMapping(value = "/deleteAddress", method = RequestMethod.POST)
-    public String deleteAddress(@RequestParam("addressId") int addressId, HttpSession session) {
+    public String deleteAddress(@RequestParam("addressId") int addressId, HttpSession session,
+                                Model model) {
 
         Person person = (Person) session.getAttribute("person");
 //        HAVE TO REMOVE ADDRESS FROM LIST BEFORE RENDERING ACCOUNT VIEW AGAIN
@@ -181,6 +183,9 @@ public class AccountUpdateController {
             }
         }
 
+        if (person.getPrimaryAddress().getAddressId() == addressId) {
+            model.addAttribute("AddressMsg", "Please select or add a primary shipping address.");
+        }
         person.getAddressList().remove(addressToRemove);
 //        System.out.println(addressId);
         addressRepo.deleteAddress(addressId);
@@ -194,6 +199,20 @@ public class AccountUpdateController {
         Person person = (Person) session.getAttribute("person");
 
         personRepo.setPrimaryAddress(person.getPersonId(), addressId);
+
+        person.setPrimaryAddress(addressRepo.getAddressById(addressId));
+
+        return "account";
+    }
+
+    @RequestMapping(value = "/setPrimaryPhone", method = RequestMethod.POST)
+    public String setPrimaryPhone(@RequestParam("phoneId") int phoneId, HttpSession session) {
+
+        Person person = (Person) session.getAttribute("person");
+
+        personRepo.setPrimaryPhone(person.getPersonId(), phoneId);
+
+        person.setPrimaryPhone(phoneRepo.findPhoneById(phoneId));
 
         return "account";
     }

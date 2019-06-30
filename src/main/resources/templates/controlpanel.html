@@ -21,6 +21,11 @@
         <a th:href="@{'/findUser'}" class="btn btn-danger edit-login">Change password</a>
     </div>
 </div>
+<a href="/statistics" class="btn btn-outline-primary" >GET STATISTICS</a>
+<div class="container" th:if="${TotalSales != null}">
+    <p th:text="'Total sales to date: $ '+${TotalSales}"></p>
+    <p th:text="'Current total pending in customer carts : $ ' + ${PendingSales}"></p>
+</div>
 <div class="container">
     <table class="table table-hover">
         <thead>
