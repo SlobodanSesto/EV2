@@ -1,6 +1,7 @@
 package com.test.evstore.controllers;
 
 
+import com.test.evstore.models.Person;
 import com.test.evstore.models.Product;
 import com.test.evstore.repositories.ProductRepo;
 import org.apache.commons.io.FilenameUtils;
@@ -41,6 +42,8 @@ public class ProductController {
     public List<Product> getAllProducts() {
         return productRepo.getAllProducts();
     }
+
+    public List<Product> getFeaturedProducts() { return productRepo.getFeatured(); }
 
     @RequestMapping(value = "/search-products", method = RequestMethod.POST)
     public String searchProducts(@RequestParam("tfSearch") String searchText,
@@ -148,5 +151,25 @@ public class ProductController {
         products = productRepo.getAllProducts();
         model.addAttribute("products", products);
         return "controlpanel";
+    }
+
+    //might change it to GET request , thats why admin check is there
+    @RequestMapping(value = "/togglefeatured", method = RequestMethod.POST)
+    public String toggleFeatured(HttpSession session, Model model,
+                                 @RequestParam("proId") int proId,
+                                 @RequestParam("featuredVal") int featuredVal) {
+        Person p = (Person) session.getAttribute("person");
+        if (p.getUser().getRole() == 2) {
+            if (featuredVal == 2) {
+                productRepo.toggleFeatured(proId, 1);
+            } else {
+                productRepo.toggleFeatured(proId, 2);
+            }
+            List<Product> products = null;
+            products = productRepo.getAllProducts();
+            model.addAttribute("products", products);
+            return "controlpanel";
+        }
+        return "index";
     }
 }

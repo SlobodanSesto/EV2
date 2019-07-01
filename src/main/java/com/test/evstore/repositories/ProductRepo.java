@@ -104,6 +104,7 @@ public class ProductRepo {
     }
 
     //gets current number of product in stock
+    //function is used during the checkout process to get the most up to date quantity in stock
     public int getProductStock(int id) {
         String sql = "SELECT pro_stock FROM product WHERE pro_id=?";
         int count = jdbcTemplate.query(sql,resultSet -> { resultSet.next(); return resultSet.getInt("pro_stock");}, id);
@@ -134,6 +135,26 @@ public class ProductRepo {
             jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
             System.out.println(e);
         }
+    }
+
+    // updates the featured column in  the product table , which is used to display featured products on home view
+    public void toggleFeatured(int proId, int i) {
+        String sql = "UPDATE product SET featured=? WHERE pro_id=?";
+        try {
+            jdbcTemplate.update(sql, i, proId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+    }
+
+    public List<Product> getFeatured() {
+        List<Product> products = null;
+        String sql = "SELECT * FROM product WHERE featured=2";
+        products = jdbcTemplate.query( sql, (resultSet, i) -> {
+            return new ProductRowMapper().mapRow(resultSet, i);
+        });
+        return products;
     }
 
 }

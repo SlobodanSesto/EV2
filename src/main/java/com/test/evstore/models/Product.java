@@ -14,6 +14,8 @@ public class Product {
 
     private int category;
 
+    private int featured;
+
     public Product() {
     }
 
@@ -69,5 +71,13 @@ public class Product {
 
     public void setCategory(int category) {
         this.category = category;
+    }
+
+    public void setFeatured(int featured) {
+        this.featured = featured;
+    }
+
+    public int getFeatured() {
+        return featured;
     }
 }

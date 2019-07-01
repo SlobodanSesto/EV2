@@ -19,7 +19,7 @@ public class HomeController {
     public String home(Model model) {
         //autowired productcontroller returns all the products
         //to be displayed on the home page as "featured products"
-        List<Product> productList = productController.getAllProducts();
+        List<Product> productList = productController.getFeaturedProducts();
         model.addAttribute("productList" , productList);
 //        List<String> products = productController.getAllProductNames();
 //        model.addAttribute("products" , products);

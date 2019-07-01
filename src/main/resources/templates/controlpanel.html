@@ -35,6 +35,7 @@
             <th scope="col">Name</th>
             <th scope="col">Manufacturer</th>
             <th scope="col">Category</th>
+            <th scope="col">Toggle Featured</th>
             <th scope="col"> </th>
             <th scope="col"> </th>
         </tr>
@@ -49,6 +50,18 @@
             <td>manufacturer</td>
             <td th:text="${pro.getCategory()}"></td>
             <td>
+                <form method="POST" action="/togglefeatured">
+                    <input type="hidden" name="proId" th:value="${pro.getProductId()}"/>
+                    <input type="hidden" name="featuredVal" th:value="${pro.getFeatured()}"/>
+                    <span th:if="${pro.getFeatured() == 1}">
+                        <input type="submit" class="btn btn-primary" value="+ Featured"/>
+                    </span>
+                    <span th:if="${pro.getFeatured() == 2}">
+                        <input type="submit" class="btn btn-primary" value="- Remove"/>
+                    </span>
+                </form>
+            </td>
+            <td>
                 <form method="POST" action="/deleteProduct">
                     <input type="hidden" name="productId" th:value="${pro.getProductId()}"/>
                     <button type="submit" class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
@@ -62,7 +75,7 @@
 
         </tr>
         <tr>
-            <td colspan="7">
+            <td colspan="8">
                 <button class="btn btn-sm btn-success addProductBtn">+ Add new product</button>
             </td>
         </tr>
