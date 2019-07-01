@@ -62,6 +62,8 @@ public class CartController {
         return "cart";
     }
 
+    //function imitates a transaction where either all the products in cart can be purchased and are in stock
+    // or the process gets reversed if at any point product stock becomes <= 0.
     @RequestMapping(value = "/checkOut", method = RequestMethod.POST)
     public String checkOut(HttpSession session, Model model) {
 
@@ -69,14 +71,21 @@ public class CartController {
         person.getInvoice().setProducts(invoiceRepo.getProductsOnInvoice(person.getInvoice().getInvoiceId()));
         //exit back to account page if primary address is not set
         if (person.getPrimaryAddress() != null) {
+            //done !! -todo currently function doesnt know when there are multiples of a product in cart and doesnt update
+            //stock correctly in the model, and because of that it keeps updating the database when the model has
+            //stock of >= 1 but there are 2 of the same product
+            //
             //check if products are in stock before processing order
+            //
+            //keeps track of position in the list of products in case the quantity
+            // needs to be reversed when a product isn't in stock
+            int counter = 0;
             for (Product p : person.getInvoice().getProducts()) {
-                //keeps track of position in the list of products in case the quantity
-                // needs to be reversed when a product isn't in stock
-                int counter = 0;
+                //fetches the most up-to-date quantity in DB
+                int currentStock = productRepo.getProductStock(p.getProductId());
                 //while iterating through the cart if the quantity falls below (0) the loop to reverse stock updates
                 // should be executed to reverse state of products in stock to before attempted checkout
-                if (p.getQuantity() - 1 < 0) {
+                if (currentStock - 1 < 0) {
                     for (Product pReverse : person.getInvoice().getProducts()) {
                         if ( counter > 0 ) {
                             productRepo.reverseStock(pReverse.getProductId());

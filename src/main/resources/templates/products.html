@@ -11,7 +11,8 @@
 
 <div class="container mx-auto row">
     <div class="card mx-auto" style="width: 18rem; margin: 5px 15px;" th:each="productObj : ${products}">
-        <a th:href="@{'/findProduct/' + ${productObj.getProductId()}}" th:data-id="${productObj.getProductId()}" class="product-info-btn">
+        <a th:href="@{'/findProduct/' + ${productObj.getProductId()}}" th:data-id="${productObj.getProductId()}"
+           class="product-info-btn">
             <img th:src="@{'/images/' + ${productObj.getProductId()} +'.jpg'}" class="card-img-top border" alt="...">
         </a>
         <div class="card-body">
@@ -23,39 +24,39 @@
                 <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
             </form>
         </div>
-    </a>
-</div>
-<div class="product-info-modal">
-    <div class="modal fade productInfoModal" id="productInfoModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <input type="hidden" id="productId" name="productId" value=""/>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="img-responsive col-9">
-                                        <img class="productImg" id="productImg" src="" alt="">
-                                    </div>
-                                    <div class="col-3">
-                                        <p class="productDesc"></p>
-                                        <h5 class="productPrice"></h5>
+        </a>
+    </div>
+    <div class="product-info-modal">
+        <div class="modal fade productInfoModal" id="productInfoModal" tabindex="-1" role="dialog"
+             aria-labelledby="ModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <input type="hidden" id="productId" name="productId" value=""/>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="img-responsive col-9">
+                                            <img class="productImg" id="productImg" src="" alt="">
+                                        </div>
+                                        <div class="col-3">
+                                            <p class="productDesc"></p>
+                                            <h5 class="productPrice"></h5>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="modal-footer">
+                                    <form th:method="POST" th:action="@{/addToCart}">
+                                        <input type="hidden" name="proId" id="proModalId" value="">
+                                        <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
+                                    </form>
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                                <form th:method="POST" th:action="@{/addToCart}">
-                                    <input type="hidden" name="proId" id="proModalId" value="">
-                                    <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
-                                </form>
-                            </div>
-                        </div>
-
                         </div>
                     </div>
                 </div>
