@@ -77,7 +77,7 @@ public class InvoiceRepo {
 
         List<Product> products = null;
 
-        String sql = "SELECT p.pro_id, p.pro_name, p.pro_price, p.pro_desc, p.pro_stock, p.category_id FROM product p " +
+        String sql = "SELECT p.pro_id, p.pro_name, p.pro_price, p.pro_desc, p.pro_stock, p.category_id, p.featured FROM product p " +
                 "INNER JOIN invoice_product ip ON p.pro_id = ip.pro_id WHERE ip.inv_id=?;";
 
 //query below didn't return multiples of a product on invoice, refactored statement above works
@@ -133,10 +133,11 @@ public class InvoiceRepo {
         }
         return total;
     }
-
+    //updated sql to set 0 if nessted select returns null (when there are no products on invoice) was throwing sql error
+    //that was trying to write "null" string
     public void updateTotal(int invId) {
-        String sql = "UPDATE invoice SET inv_total=(SELECT sum(p.pro_price) FROM product p " +
-                "INNER JOIN invoice_product ip ON p.pro_id = ip.pro_id WHERE ip.inv_id=?) WHERE inv_id=?;";
+        String sql = "UPDATE invoice SET inv_total=ifnull((SELECT sum(p.pro_price) FROM product p " +
+                "INNER JOIN invoice_product ip ON p.pro_id = ip.pro_id WHERE ip.inv_id=?),0) WHERE inv_id=?;";
         try {
             jdbcTemplate.update(sql, invId, invId);
         } catch ( Exception e ) {
