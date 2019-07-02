@@ -23,6 +23,8 @@ public class Person {
 
     private List<Address> addressList;
 
+    private List<Invoice> completedOrders;
+
     private Address primaryAddress;
 
     private Phone primaryPhone;
@@ -107,5 +109,13 @@ public class Person {
 
     public void setPrimaryPhone(Phone primaryPhone) {
         this.primaryPhone = primaryPhone;
+    }
+
+    public void setCompletedOrders(List<Invoice> completedOrders) {
+        this.completedOrders = completedOrders;
+    }
+
+    public List<Invoice> getCompletedOrders() {
+        return completedOrders;
     }
 }

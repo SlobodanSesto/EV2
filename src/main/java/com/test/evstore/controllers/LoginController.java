@@ -55,10 +55,16 @@ public class LoginController {
             List<Phone> phoneList = phoneRepo.getPhoneList(p.getPersonId());
             List<Address> addressList = addressRepo.getAllAddresses(p.getPersonId());
             p.setInvoice(invoiceRepo.getPersonInvoice(p.getPersonId()));
-//            p.getInvoice().setInvoiceTotal(invoiceRepo.getTotal(p.getInvoice().getInvoiceId()));
+            p.setCompletedOrders(invoiceRepo.getUserOrders(p.getPersonId()));
             p.setUser(u);
             p.setPhoneList(phoneList);
             p.setAddressList(addressList);
+
+            //goes over the list of completed oders and sets the products to each invoice to display
+            //old orders on account page for user
+            for (Invoice i : p.getCompletedOrders()) {
+                i.setProducts(invoiceRepo.getProductsOnInvoice(i.getInvoiceId()));
+            }
 
             Address primaryAddress = null;
             primaryAddress = personRepo.getPrimaryAddress(p.getPersonId());

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -155,5 +154,17 @@ public class InvoiceRepo {
     }
 
 
-
+    public List<Invoice> getUserOrders(int personId) {
+        String sql = "SELECT * FROM invoice WHERE per_id=? AND state=3;";
+        List<Invoice> invoices = null;
+        try {
+            invoices = jdbcTemplate.query( sql, (resultSet, i) -> {
+                return new InvoiceRowMapper().mapRow(resultSet, i);
+            }, personId);
+        } catch ( Exception e ) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+        return invoices;
+    }
 }

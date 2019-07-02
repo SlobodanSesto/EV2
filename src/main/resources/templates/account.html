@@ -39,7 +39,6 @@
     </div>
 </div>
 <div class="container row">
-
     <div class="container border text-center" style="width: 18rem;">Phone numbers
         <!-- style="color: white;" -->
         <button class="btn btn-sm btn-primary addPhoneBtn">+ADD</button>
@@ -84,6 +83,34 @@
     <!--</div>-->
 </div>
 
+<div class="container-fluid">
+    <div class="container" th:if="${session.person.getCompletedOrders() != null}">
+        <h3>Past orders</h3>
+        <div class="container mx-auto row" th:each="orderInvoice : ${session.person.getCompletedOrders()}">
+            <hr>
+            <table class="table table-hover" >
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Product</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="pro : ${orderInvoice.getProducts()}">
+                    <td><img th:src="@{'/images/' + ${pro.getProductId()} +'.jpg'}" class="img-responsive" style="width:80px; border-radius: 5px;"
+                             alt="..."></td>
+                    <td th:text="${pro.getProductName()}"></td>
+                    <td th:text="'$' + ${pro.getProductPrice()}"></td>
+                </tr>
+                <tr>
+                    <th colspan="2"></th>
+                    <th colspan="2" th:text="'Total on this order : $ ' + ${orderInvoice.getInvoiceTotal()}"></th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+</div>
 <div class="phone-form">
     <form th:action="@{/saveNumber}" method="POST">
         <div class="modal fade" id="phoneUpdateModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"

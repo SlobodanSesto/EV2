@@ -15,13 +15,15 @@ public class AdminController {
 
     @Autowired
     InvoiceRepo invoiceRepo;
+    @Autowired
+    CartController cartController;
 
     @RequestMapping(value = "/statistics", method = RequestMethod.GET)
     public String getStats(HttpSession session , Model model) {
 
         Person person = (Person) session.getAttribute("person");
         if (person.getUser().getRole() == 2) {
-            model.addAttribute("TotalSales", String.valueOf(invoiceRepo.salesStats(3)));
+            model.addAttribute("TotalSales", String.valueOf(cartController.priceFormat(invoiceRepo.salesStats(3))));
             model.addAttribute("PendingSales", String.valueOf(invoiceRepo.salesStats(1)));
 
             return "controlpanel";
