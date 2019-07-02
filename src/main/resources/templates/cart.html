@@ -19,6 +19,11 @@
             <span th:text="${OutOfStock}"></span>
         </div>
     </div>
+    <div class="container" th:if="${emptyCart != null}">
+        <div class="alert alert-danger" role="alert">
+            <span th:text="${emptyCart}"></span>
+        </div>
+    </div>
     <div class="container" th:if="${session.person.getInvoice() != null}">
         <h4 th:text="${session.person.getInvoice().getInvoiceId()}"></h4>
         <div class="container mx-auto row">

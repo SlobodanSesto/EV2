@@ -69,6 +69,12 @@ public class CartController {
 
         Person person = (Person) session.getAttribute("person");
         person.getInvoice().setProducts(invoiceRepo.getProductsOnInvoice(person.getInvoice().getInvoiceId()));
+        //bug fix - needed a check to see if cart is empty and if so break
+        if (person.getInvoice().getProducts().isEmpty()){
+            model.addAttribute("emptyCart", "Please add items to cart before checking out.");
+            System.out.println("empty cart");
+            return "cart";
+        }
         //exit back to account page if primary address is not set
         if (person.getPrimaryAddress() != null) {
             //done !! -todo currently function doesnt know when there are multiples of a product in cart and doesnt update
