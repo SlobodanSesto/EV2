@@ -50,6 +50,8 @@ public class RegistrationController {
         person.setUser(user);
         person.setInvoice(new Invoice());
         person.getInvoice().setInvoiceId(invoiceRepo.insertInvoice(person.getPersonId()));
+        person.setWishlist(new Invoice());
+        person.getWishlist().setInvoiceId(invoiceRepo.insertWishlist(person.getPersonId()));
         session.setAttribute("userId", person.getPersonId());
         session.setAttribute("person", person);
         return "account";

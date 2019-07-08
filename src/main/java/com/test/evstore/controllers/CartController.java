@@ -38,15 +38,43 @@ public class CartController {
 
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
     public String addToCart(@RequestParam("proId") int proId,
-                            HttpSession session) {
+                            HttpSession session, Model model) {
         System.out.println(proId);
         Person person = (Person) session.getAttribute("person");
         if (person == null) {
-            return "redirect:/login";
+            model.addAttribute("notLoggedIn", "Please sign in before adding items to cart or wishlist");
+            return "index";
         }
         invoiceRepo.addProductToInvoice(person.getInvoice().getInvoiceId(), proId);
         person.getInvoice().setProducts(invoiceRepo.getProductsOnInvoice(person.getInvoice().getInvoiceId()));
         person.getInvoice().setInvoiceTotal(updateTotalOnInvoice(person.getInvoice().getProducts()));
+        session.setAttribute("person", person);
+        return "cart";
+    }
+
+    @RequestMapping(value = "/addToWishlist", method = RequestMethod.POST)
+    public String addToWishlist(@RequestParam("proIdWishlist") int proId,
+                                HttpSession session, Model model) {
+
+        Person person = (Person) session.getAttribute("person");
+        if (person == null) {
+            model.addAttribute("notLoggedIn", "Please sign in before adding items to cart or wishlist");
+            return "index";
+        }
+
+        invoiceRepo.addProductToInvoice(person.getWishlist().getInvoiceId(), proId);
+        person.getWishlist().setProducts(invoiceRepo.getProductsOnInvoice(person.getWishlist().getInvoiceId()));
+        session.setAttribute("person", person);
+
+        return "cart";
+    }
+
+    @RequestMapping(value = "/removeFromWishlist", method = RequestMethod.POST)
+    public String removeFromWishlist(@RequestParam("productId") int proId,
+                                     HttpSession session) {
+        Person person = (Person) session.getAttribute("person");
+        invoiceRepo.removeFromCart(person.getWishlist().getInvoiceId(), proId);
+        person.getWishlist().setProducts(invoiceRepo.getProductsOnInvoice(person.getWishlist().getInvoiceId()));
         session.setAttribute("person", person);
         return "cart";
     }

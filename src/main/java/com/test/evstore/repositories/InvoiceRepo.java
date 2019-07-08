@@ -167,4 +167,39 @@ public class InvoiceRepo {
         }
         return invoices;
     }
+
+    //creates a wishlist record in invoice table for user to add items that are not currently in stock.
+    public int insertWishlist(int personId) {
+        String sql = "INSERT INTO invoice (per_id, state) VALUES (?,2);";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        try {
+            jdbcTemplate.update(dataSource -> {
+                PreparedStatement ps = dataSource
+                        .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, personId);
+                return ps;
+            }, keyHolder);
+        } catch (Exception e) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+        return keyHolder.getKey().intValue();
+    }
+
+    // retrieves users wishlist , if null then one is created and returned
+    public Invoice getWishlist(int personId) {
+        Invoice invoice = null;
+        String sql = "SELECT * FROM invoice WHERE per_id=? AND state=2;";
+        try {
+            invoice = jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
+                return new InvoiceRowMapper().mapRow(resultSet, i);
+            }, personId);
+        } catch (Exception e) {
+            jdbcTemplate.update("INSERT INTO error_log (error) VALUES (?);", e.getMessage());
+            System.out.println(e);
+        }
+        return invoice;
+    }
+
 }

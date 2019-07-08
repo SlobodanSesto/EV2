@@ -54,10 +54,10 @@
                     <input type="hidden" name="proId" th:value="${pro.getProductId()}"/>
                     <input type="hidden" name="featuredVal" th:value="${pro.getFeatured()}"/>
                     <span th:if="${pro.getFeatured() == 1}">
-                        <input type="submit" class="btn btn-primary" value="+ Featured"/>
+                        <input type="submit" class="btn btn-sm btn-primary" value="+ Featured"/>
                     </span>
                     <span th:if="${pro.getFeatured() == 2}">
-                        <input type="submit" class="btn btn-primary" value="- Remove"/>
+                        <input type="submit" class="btn btn-sm btn-primary" value="- Remove"/>
                     </span>
                 </form>
             </td>
@@ -116,6 +116,8 @@
                         </div>
                         <div class="form-group">
                             <label for="product-category" class="col-form-label">Category:</label>
+                            <small class="form-text text-muted">1 for E-bike, 2 for Scooter, 3 for Other,
+                                4 for Charging-device, 5 for Moped</small>
                             <input type="text" class="form-control" id="product-category" name="product-category" value=""/>
                         </div>
                         <div class="form-group">

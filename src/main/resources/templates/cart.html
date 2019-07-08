@@ -66,5 +66,36 @@
         </div>
     </div>
 </div>
+
+<div th:if="${session.person.getWishlist() != null}">
+    <div class="container mx-auto row">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th colspan="3">Wish list</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>Product</th>
+                <th>Remove</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="wishProductObj : ${session.person.getWishlist().getProducts()}">
+                <td><img th:src="@{'/images/' + ${wishProductObj.getProductId()} +'.jpg'}" class="img-responsive"
+                         style="width:80px; border-radius: 5px;"
+                         alt="..."></td>
+                <td th:text="${wishProductObj.getProductName()}"></td>
+                <td>
+                    <form method="POST" action="/removeFromWishlist">
+                        <input type="hidden" name="productId" th:value="${wishProductObj.getProductId()}"/>
+                        <input type="submit" class="btn btn-danger" value="X"/>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>

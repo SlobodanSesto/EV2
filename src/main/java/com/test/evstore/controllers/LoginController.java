@@ -56,6 +56,8 @@ public class LoginController {
             List<Address> addressList = addressRepo.getAllAddresses(p.getPersonId());
             p.setInvoice(invoiceRepo.getPersonInvoice(p.getPersonId()));
             p.setCompletedOrders(invoiceRepo.getUserOrders(p.getPersonId()));
+            p.setWishlist(invoiceRepo.getWishlist(p.getPersonId()));
+            p.getWishlist().setProducts(invoiceRepo.getProductsOnInvoice(p.getWishlist().getInvoiceId()));
             p.setUser(u);
             p.setPhoneList(phoneList);
             p.setAddressList(addressList);

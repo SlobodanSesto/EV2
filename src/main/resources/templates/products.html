@@ -18,11 +18,24 @@
         <div class="card-body">
             <h5 class="card-title" th:text="${productObj.getProductName()}"></h5>
             <p class="card-text" th:text="${productObj.getProductDesc()}"></p>
-
-            <form th:method="POST" th:action="@{/addToCart}">
-                <input type="hidden" name="proId" id="proId" th:value="${productObj.getProductId()}">
-                <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
-            </form>
+            <div>
+                <form th:method="POST" th:action="@{/addToCart}">
+                    <input type="hidden" name="proId" id="proId" th:value="${productObj.getProductId()}">
+                    <span th:if="${productObj.getQuantity() > 0}">
+                        <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
+                    </span>
+                </form>
+            </div>
+            <div>
+                <form th:method="POST" th:action="@{/addToWishlist}">
+                    <input type="hidden" name="proIdWishlist" id="proIdWishlist"
+                           th:value="${productObj.getProductId()}">
+                    <span th:if="${productObj.getQuantity() <= 0}">
+                        <span>Out of stock*</span>
+                        <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO WISHLIST">
+                    </span>
+                </form>
+            </div>
         </div>
         </a>
     </div>
@@ -49,13 +62,12 @@
                                             <h5 class="productPrice"></h5>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <form th:method="POST" th:action="@{/addToCart}">
-                                        <input type="hidden" name="proId" id="proModalId" value="">
-                                        <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
-                                    </form>
-                                </div>
+                                    <div class="modal-footer">
+                                        <form th:method="POST" th:action="@{/addToCart}">
+                                            <input type="hidden" name="proId" id="proModalId" value="">
+                                            <input class="btn btn-sm btn-outline-primary add-to-cart-btn" type="submit" value="ADD TO CART">
+                                        </form>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -79,12 +91,10 @@
                 <!--</div>-->
                 <!--</div>-->
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">ADD TO CART</button>
-                </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>

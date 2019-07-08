@@ -9,23 +9,44 @@
     <div class="logged-out vh-100" th:if="${loggedOut}">
         <p th:text="${loggedOut}"></p>
     </div>
-    <div th:if="${loggedOut == null}">
+    <div th:if="${loggedOut == null && notLoggedIn == null}">
         <h1>Featured Items</h1>
+    </div>
+    <div class="container" th:if="${notLoggedIn != null}">
+        <div class="alert alert-danger" role="alert">
+            <span th:text="${notLoggedIn}"></span>
+        </div>
     </div>
 </div>
 <div style="width: 980px" class="jumbotron text-center mx-auto" th:if="${loggedOut == null}">
     <div class="container mx-auto row">
         <div class="card mx-auto" style="width: 18rem; margin: 5px 15px;" th:each="productObj : ${productList}">
-            <a th:href="@{'/findProduct/' + ${productObj.getProductId()}}" th:data-id="${productObj.getProductId()}" class="product-info-btn">
-                <img th:src="@{'/images/' + ${productObj.getProductId()} +'.jpg'}" class="card-img-top border" alt="...">
+            <a th:href="@{'/findProduct/' + ${productObj.getProductId()}}" th:data-id="${productObj.getProductId()}"
+               class="product-info-btn">
+                <img th:src="@{'/images/' + ${productObj.getProductId()} +'.jpg'}" class="card-img-top border"
+                     alt="...">
             </a>
             <div class="card-body">
                 <h5 class="card-title" th:text="${productObj.getProductName()}"></h5>
                 <p class="card-text" th:text="${productObj.getProductDesc()}"></p>
-                <form th:method="POST" th:action="@{/addToCart}">
-                    <input type="hidden" name="proId" id="proId" th:value="${productObj.getProductId()}">
-                    <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
-                </form>
+                <div>
+                    <form th:method="POST" th:action="@{/addToCart}">
+                        <input type="hidden" name="proId" id="proId" th:value="${productObj.getProductId()}">
+                        <span th:if="${productObj.getQuantity() > 0}">
+                        <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
+                    </span>
+                    </form>
+                </div>
+                <div>
+                    <form th:method="POST" th:action="@{/addToWishlist}">
+                        <input type="hidden" name="proIdWishlist" id="proIdWishlist"
+                               th:value="${productObj.getProductId()}">
+                        <span th:if="${productObj.getQuantity() <= 0}">
+                            <span>Out of stock*</span>
+                            <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO WISHLIST">
+                        </span>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -75,7 +96,7 @@
                 <div class="modal-footer">
                     <form th:method="POST" th:action="@{/addToCart}">
                         <input type="hidden" name="proId" id="proModalId" value="">
-                        <input class="btn btn-sm btn-outline-primary" type="submit" value="ADD TO CART">
+                        <input class="btn btn-sm btn-outline-primary add-to-cart-btn" type="submit" value="ADD TO CART">
                     </form>
                 </div>
             </div>

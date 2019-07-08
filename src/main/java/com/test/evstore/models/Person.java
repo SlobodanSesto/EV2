@@ -25,6 +25,8 @@ public class Person {
 
     private List<Invoice> completedOrders;
 
+    private Invoice wishlist;
+
     private Address primaryAddress;
 
     private Phone primaryPhone;
@@ -117,5 +119,13 @@ public class Person {
 
     public List<Invoice> getCompletedOrders() {
         return completedOrders;
+    }
+
+    public Invoice getWishlist() {
+        return wishlist;
+    }
+
+    public void setWishlist(Invoice wishlist) {
+        this.wishlist = wishlist;
     }
 }

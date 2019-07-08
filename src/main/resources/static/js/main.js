@@ -100,6 +100,16 @@ $(document).ready(function () {
         $('.product-form #productUpdateModal').modal();
     })
 
+    // Disable function for the input buttons on product info modals
+    jQuery.fn.extend({
+        disable: function(state) {
+            return this.each(function() {
+                this.disabled = state;
+            });
+        }
+    });
+
+
     //shows a modal with product details fetched from /findProduct/{id}
     $('.product-info-btn').on('click', function (event) {
         event.preventDefault();
@@ -107,6 +117,19 @@ $(document).ready(function () {
         var myImageId = $(this).data('id');
         var href = $(this).attr('href');
         $.get(href, function (product, status) {
+
+            //if the product is not in stock the add to cart button will be disabled
+            if (product.quantity <= 0) {
+                $('.product-info-modal .add-to-cart-btn').prop("value","Out of stock");
+                $('.product-info-modal input[type="submit"]').disable(true);
+            }
+            //reverses the above function when a different product is clicked
+            //if not done than all the modals opened after would have disabled button
+            if (product.quantity > 0) {
+                $('.product-info-modal .add-to-cart-btn').prop("value","ADD TO CART");
+                $('.product-info-modal input[type="submit"]').disable(false);
+            }
+
             $('.product-info-modal #productId').val(product.productId);
             $('.product-info-modal   #productImg').attr("src", "/images/"+myImageId+".jpg");
             $('.product-info-modal   #productImg').css("width", "60%");
@@ -115,7 +138,7 @@ $(document).ready(function () {
             $('.product-info-modal   .productPrice').text("$"+product.productPrice);
 
         })
-
+        // carousel will be implemented when more than 1 picture is able to be added for each product
         // $('.product-info-modal .carouselExampleSlidesOnly').carousel({
         //     interval: 2000
         // })
