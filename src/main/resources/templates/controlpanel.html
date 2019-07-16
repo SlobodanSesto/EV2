@@ -26,6 +26,7 @@
     <p th:text="'Total sales to date: $ '+${TotalSales}"></p>
     <p th:text="'Current total pending in customer carts : $ ' + ${PendingSales}"></p>
 </div>
+<br><br>
 <div class="container">
     <table class="table table-hover">
         <thead>
@@ -81,6 +82,13 @@
         </tr>
         </tbody>
     </table>
+</div>
+
+<br>
+<div>
+    <hr>
+    <a href="/errorlog"><button class="btn btn-sm btn-outline-danger">Error Log (JSON Format)</button></a>
+    <hr>
 </div>
 <div class="product-form">
     <form th:action="@{/saveProduct}" method="POST" enctype="multipart/form-data">
